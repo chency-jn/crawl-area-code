@@ -17,7 +17,7 @@ class CrawlTownCode(object):
         #start_url = 'http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2020/11/1101.html'
         start_url = 'http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2020/37/01/370124.html'
         trs = self.get_resp(start_url, 'towntr')
-        # 循环数据的每一行
+        # 循环数据的每一行 乡镇/街道
         for tr in trs:
             if tr.find_all('td')[1].a != None:
                 datas = []
@@ -28,7 +28,7 @@ class CrawlTownCode(object):
                 datas.append(data)
                 village_url = base_url + town_code[0:2] + '/' + town_code[2:4] + '/' + tr.find_all('td')[1].a.get('href')
                 trs = self.get_resp(village_url, None)
-                for tr in trs[1:]:  # 循环每个街道/村
+                for tr in trs[1:]:  # 循环每个 社区/村
                     village_code = tr.find_all('td')[0].string[0:12]
                     catagory = tr.find_all('td')[1].string
                     village_name = tr.find_all('td')[2].string
@@ -36,7 +36,7 @@ class CrawlTownCode(object):
                     print(village_name)
                     datas.append(data)
             time.sleep(1)
-            sql = "INSERT INTO `travel`.`area_code_child`(`code`, `name`,`p_code`, `level`, `catagory`)  values (%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE code = VALUES(code)"
+            sql = "INSERT INTO `area_code_child`(`code`, `name`,`p_code`, `level`, `catagory`)  values (%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE code = VALUES(code)"
             self.connect_mysql(sql, datas)
 
 
