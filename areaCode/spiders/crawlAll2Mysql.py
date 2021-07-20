@@ -55,13 +55,13 @@ class CrawlAllCode(object):
                                     print('======没找到===')
                                     continue
                                 country_url = base_url + province_code + '/' + tr.find_all('td')[1].a.get('href')
-                                if crawl_conuty_url != country_url:
-                                    continue
-                                else:
-                                    self.crawlTownDown(tr, base_url, province_code)
+                                #if crawl_conuty_url != country_url:
+                                 #   continue
+                                #else:
+                                self.crawlTownDown(tr, base_url, province_code)
 
                             time.sleep(2)
-                    sql = "insert into area_code (province_code,province_name,city_code,city_name,county_code,county_name) values (%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE province_code = VALUES(province_code)"
+                    sql = "insert into area_code (id,province_code,province_name,city_code,city_name,county_code,county_name,created_time,create_by) values (REPLACE(UUID(), '-', ''),%s,%s,%s,%s,%s,%s,NOW(),'root') ON DUPLICATE KEY UPDATE province_code = VALUES(province_code)"
                     self.connect_mysql(sql, datas)
 
     def crawlTownDown(self, tr, base_url, province_code):
@@ -94,7 +94,7 @@ class CrawlAllCode(object):
                     print(village_name)
                     datas.append(data)
             time.sleep(2)
-            sql = "INSERT INTO `area_code_child`(`code`, `name`,`p_code`, `level`, `catagory`)  values (%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE code = VALUES(code)"
+            sql = "INSERT INTO `area_code_child`(`id`,`code`, `name`,`p_code`, `level`, `catagory`,`created_time`,`created_by`)  values (REPLACE(UUID(), '-', ''),%s,%s,%s,%s,%s,now(),'root') ON DUPLICATE KEY UPDATE code = VALUES(code)"
             self.connect_mysql(sql, datas)
 
     def get_resp(self, url, attr):
