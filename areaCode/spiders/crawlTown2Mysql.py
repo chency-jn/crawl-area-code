@@ -36,7 +36,7 @@ class CrawlTownCode(object):
                     print(village_name)
                     datas.append(data)
             time.sleep(1)
-            sql = "INSERT INTO `area_code_child`(`code`, `name`,`p_code`, `level`, `catagory`)  values (%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE code = VALUES(code)"
+            sql = "INSERT INTO `area_code_child`(`id`,`code`, `name`,`p_code`, `level`, `catagory`,`created_time`,`created_by`,`updated_by`,`updated_time`)  values (REPLACE(UUID(), '-', ''),%s,%s,%s,%s,%s,now(),'root','root',now()) ON DUPLICATE KEY UPDATE code = VALUES(code)"
             self.connect_mysql(sql, datas)
 
 
